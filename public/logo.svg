@@ -1,0 +1,27 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5"/>
+      <stop offset="50%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded square background -->
+  <rect width="512" height="512" rx="128" fill="url(#bg)"/>
+  
+  <!-- Stylish location pin - bold and calm -->
+  <g transform="translate(256, 240)">
+    <!-- Outer glow -->
+    <ellipse cx="0" cy="100" rx="60" ry="16" fill="rgba(0,0,0,0.15)"/>
+    
+    <!-- Pin body -->
+    <path d="M0 -140 C-77 -140 -140 -77 -140 0 C-140 50 -100 110 0 180 C100 110 140 50 140 0 C140 -77 77 -140 0 -140 Z" fill="#FFFFFF"/>
+    
+    <!-- Inner circle -->
+    <circle cx="0" cy="-20" r="52" fill="url(#bg)"/>
+    
+    <!-- Dot highlight -->
+    <circle cx="0" cy="-20" r="20" fill="#FFFFFF" opacity="0.9"/>
+  </g>
+</svg>

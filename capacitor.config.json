@@ -1,0 +1,15 @@
+{
+    "appId": "com.loppa.map",
+    "appName": "Loppa Map",
+    "webDir": "dist",
+    "server": {
+        "androidScheme": "https"
+    },
+    "plugins": {
+        "SplashScreen": {
+            "launchShowDuration": 2000,
+            "backgroundColor": "#007AFF",
+            "showSpinner": false
+        }
+    }
+}
