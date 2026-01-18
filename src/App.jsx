@@ -107,6 +107,7 @@ function App() {
     const mapContainer = useRef(null);
     const map = useRef(null);
     const userMarker = useRef(null);
+    const searchMarkerRef = useRef(null);
 
     const [userLocation, setUserLocation] = useState(null);
     const [heading, setHeading] = useState(0);
@@ -121,6 +122,7 @@ function App() {
     const [weather, setWeather] = useState(null);
     const [downloadProgress, setDownloadProgress] = useState(0);
     const [isDownloading, setIsDownloading] = useState(false);
+    const [isDownloaded, setIsDownloaded] = useState(() => localStorage.getItem('isDownloaded') === 'true');
     const [locationError, setLocationError] = useState(null);
 
     const t = LANGS[lang];
@@ -144,23 +146,31 @@ function App() {
     useEffect(() => {
         if (map.current) return;
 
+        // Восстановить последний регион
+        const savedCenter = localStorage.getItem('mapCenter');
+        const savedZoom = localStorage.getItem('mapZoom');
+        const defaultCenter = savedCenter ? JSON.parse(savedCenter) : [37.6173, 55.7558];
+        const defaultZoom = savedZoom ? parseFloat(savedZoom) : 12;
+
         map.current = new maplibregl.Map({
             container: mapContainer.current,
             style: MAP_STYLES[activeTheme],
-            center: [37.6173, 55.7558],
-            zoom: 12,
+            center: defaultCenter,
+            zoom: defaultZoom,
             attributionControl: false,
         });
 
         // Погода при загрузке
-        fetchWeather(55.7558, 37.6173);
+        fetchWeather(defaultCenter[1], defaultCenter[0]);
 
-        // Погода при перемещении карты
-        let weatherTimeout;
+        // Сохранять позицию + погода при перемещении
+        let saveTimeout;
         map.current.on('moveend', () => {
-            clearTimeout(weatherTimeout);
-            weatherTimeout = setTimeout(() => {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
                 const center = map.current.getCenter();
+                localStorage.setItem('mapCenter', JSON.stringify([center.lng, center.lat]));
+                localStorage.setItem('mapZoom', map.current.getZoom().toString());
                 fetchWeather(center.lat, center.lng);
             }, 500);
         });
@@ -232,7 +242,8 @@ function App() {
         }
 
         setIsDownloading(false);
-        setTimeout(() => setDownloadProgress(0), 2000);
+        setIsDownloaded(true);
+        localStorage.setItem('isDownloaded', 'true');
     };
 
     const latLngToTile = (lat, lng, zoom) => {
@@ -362,7 +373,34 @@ function App() {
     }, [searchQuery, showSearch]);
 
     const selectResult = (r) => {
-        map.current?.flyTo({ center: [parseFloat(r.lon), parseFloat(r.lat)], zoom: 15, duration: 1500 });
+        const lng = parseFloat(r.lon);
+        const lat = parseFloat(r.lat);
+
+        map.current?.flyTo({ center: [lng, lat], zoom: 15, duration: 1500 });
+
+        // Удалить старый маркер
+        if (searchMarkerRef.current) {
+            searchMarkerRef.current.remove();
+        }
+
+        // Создать новый маркер
+        const el = document.createElement('div');
+        el.className = 'search-marker';
+        el.innerHTML = `
+            <div class="search-pin"></div>
+            <button class="search-marker-close">×</button>
+        `;
+
+        el.querySelector('.search-marker-close').addEventListener('click', (e) => {
+            e.stopPropagation();
+            searchMarkerRef.current?.remove();
+            searchMarkerRef.current = null;
+        });
+
+        searchMarkerRef.current = new maplibregl.Marker({ element: el })
+            .setLngLat([lng, lat])
+            .addTo(map.current);
+
         setShowSearch(false);
         setSearchQuery('');
         setSearchResults([]);
@@ -488,7 +526,7 @@ function App() {
                         <div className="settings-section">
                             <label>{t.download}</label>
                             <button
-                                className={`download-btn ${isDownloading ? 'downloading' : ''} ${downloadProgress === 100 ? 'done' : ''}`}
+                                className={`download-btn ${isDownloading ? 'downloading' : ''} ${isDownloaded ? 'done' : ''}`}
                                 onClick={downloadArea}
                                 disabled={isDownloading}
                             >
@@ -497,7 +535,7 @@ function App() {
                                         <span>{t.downloading}</span>
                                         <span className="progress-text">{downloadProgress}%</span>
                                     </>
-                                ) : downloadProgress === 100 ? (
+                                ) : isDownloaded ? (
                                     <span>{t.downloaded}</span>
                                 ) : (
                                     <span>{t.download}</span>
