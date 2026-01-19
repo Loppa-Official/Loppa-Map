@@ -10,14 +10,23 @@
 - 🌙 **Тёмная/светлая тема** — авто-определение
 - 🌐 **5 языков** — RU, EN, UK, DE, FR
 - 🔍 **Быстрый поиск** — авто-подсказки
+- 📍 **Маркер поиска** — красный пин с закрытием
 
 ## Технологии
 
 - React + Vite
 - MapLibre GL JS
 - Capacitor (Android)
-- Open-Meteo API
 - PWA
+
+## Источники данных
+
+| Сервис | Описание | Лицензия |
+|--------|----------|----------|
+| [CARTO](https://carto.com) | Базовые карты | [CC BY 4.0](https://carto.com/attribution/) |
+| [OpenStreetMap](https://openstreetmap.org) | Данные карт | [ODbL](https://www.openstreetmap.org/copyright) |
+| [Open-Meteo](https://open-meteo.com) | Погода | [CC BY 4.0](https://open-meteo.com/en/terms) |
+| [Nominatim](https://nominatim.org) | Геокодинг | [ODbL](https://nominatim.org/release-docs/latest/admin/Installation/#prerequisites) |
 
 ## Установка
 

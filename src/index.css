@@ -603,6 +603,18 @@ body {
     transition: width 0.2s ease;
 }
 
+/* ATTRIBUTION */
+.attribution-text {
+    font-size: 12px;
+    color: var(--text-3);
+    line-height: 1.6;
+}
+
+.attribution-text a {
+    color: var(--blue);
+    text-decoration: none;
+}
+
 /* RESPONSIVE */
 @media (min-width: 768px) {
     .modal-card {

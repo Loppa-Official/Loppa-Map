@@ -547,6 +547,15 @@ function App() {
                                 </div>
                             )}
                         </div>
+
+                        {/* Атрибуции */}
+                        <div className="settings-section attribution">
+                            <label>Data Sources</label>
+                            <div className="attribution-text">
+                                Maps © <a href="https://carto.com" target="_blank" rel="noopener">CARTO</a> / <a href="https://openstreetmap.org" target="_blank" rel="noopener">OSM</a><br />
+                                Weather © <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
